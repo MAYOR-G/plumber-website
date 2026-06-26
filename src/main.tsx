@@ -57,8 +57,7 @@ const services = [
     title: "Pipe Replacement",
     text: "Corroded, noisy, or damaged pipes replaced with minimal disruption.",
     icon: Wrench,
-    image:
-      "https://commercialplumberalbuquerque.com/wp-content/uploads/2025/01/commercialplumberalbuquerque-Retail-Store-Plumbing-Installation.jpg",
+    image: "/images/pipe-replacement.png",
     note: "Copper, PVC, supply lines, and local reroutes",
   },
   {
@@ -147,7 +146,6 @@ function App() {
   const [open, setOpen] = React.useState(false);
   const [scrolled, setScrolled] = React.useState(false);
   const [activeHero, setActiveHero] = React.useState(0);
-  const [projectShift, setProjectShift] = React.useState(0);
   const projectSectionRef = React.useRef<HTMLElement | null>(null);
   const projectStageRef = React.useRef<HTMLDivElement | null>(null);
   const projectTrackRef = React.useRef<HTMLDivElement | null>(null);
@@ -180,17 +178,19 @@ function App() {
       const stage = projectStageRef.current;
       const track = projectTrackRef.current;
       if (!section || !stage || !track || window.innerWidth < 1024) {
-        setProjectShift(0);
+        if (track) track.style.transform = "translate3d(0, 0, 0)";
         return;
       }
 
       const maxShift = Math.max(0, track.scrollWidth - stage.clientWidth);
-      const maxScroll = Math.max(1, section.offsetHeight - window.innerHeight);
+      const stickyTop = 84;
+      const sectionTop = section.offsetTop;
+      const maxScroll = Math.max(1, section.offsetHeight - stage.offsetHeight - stickyTop);
       const progress = Math.min(
         1,
-        Math.max(0, (window.scrollY - section.offsetTop) / maxScroll)
+        Math.max(0, (window.scrollY - sectionTop) / maxScroll)
       );
-      setProjectShift(maxShift * progress);
+      track.style.transform = `translate3d(-${maxShift * progress}px, 0, 0)`;
     };
 
     updateGallery();
@@ -203,7 +203,7 @@ function App() {
   }, []);
 
   return (
-    <div className="min-h-screen overflow-x-hidden bg-ice text-navy">
+    <div className="min-h-screen bg-ice text-navy">
       <header
         className={`fixed top-0 z-50 w-full transition-all duration-300 ${
           scrolled
@@ -430,10 +430,10 @@ function App() {
         <section
           id="projects"
           ref={projectSectionRef}
-          className="bg-mist px-5 py-20 lg:h-[360vh] lg:px-0 lg:py-0"
+          className="bg-mist px-5 py-20 lg:h-[300vh] lg:px-0 lg:py-0"
         >
-          <div ref={projectStageRef} className="mx-auto lg:sticky lg:top-0 lg:flex lg:h-screen lg:w-screen lg:max-w-none lg:flex-col lg:justify-center lg:overflow-hidden">
-            <div className="mx-auto flex w-full max-w-7xl flex-col gap-5 md:flex-row md:items-end md:justify-between lg:px-8">
+          <div ref={projectStageRef} className="mx-auto lg:sticky lg:top-[84px] lg:flex lg:h-[calc(100vh-84px)] lg:w-screen lg:max-w-none lg:flex-col lg:justify-center lg:overflow-hidden lg:py-10">
+            <div className="mx-auto flex w-full max-w-7xl flex-col gap-4 md:flex-row md:items-end md:justify-between lg:px-8">
               <SectionHeading eyebrow="Projects" title="Clean repairs. Better finished spaces." />
               <p className="max-w-md text-sm font-semibold leading-6 text-steel">
                 Recent plumbing work across kitchens, bathrooms, hot water systems,
@@ -442,16 +442,15 @@ function App() {
             </div>
             <div
               ref={projectTrackRef}
-              className="project-gallery mt-10 flex w-max gap-4 overflow-x-auto pb-5 lg:gap-6 lg:overflow-visible lg:px-16 lg:pb-0"
-              style={{ transform: `translate3d(-${projectShift}px, 0, 0)` }}
+              className="project-gallery mt-8 flex w-max gap-4 overflow-x-auto px-5 pb-5 lg:gap-8 lg:px-8 lg:overflow-visible lg:pb-0"
             >
               {gallery.map((item, index) => (
-                <article key={item.title} className="group relative h-[430px] min-w-[82vw] shrink-0 overflow-hidden bg-navy shadow-card sm:min-w-[560px] lg:h-[48vh] lg:min-w-[calc(100vw-8rem)]">
+                <article key={item.title} className="group relative h-[390px] min-w-[85vw] shrink-0 overflow-hidden rounded-2xl bg-navy shadow-card sm:min-w-[560px] lg:h-[55vh] lg:max-h-[500px] lg:min-w-[65vw]">
                   <img src={item.image} alt={item.title} className="absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-105" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-navy/86 via-navy/10 to-transparent" />
-                  <div className="absolute bottom-5 left-5 right-5">
+                  <div className="absolute inset-0 bg-gradient-to-r from-navy/82 via-navy/18 to-transparent" />
+                  <div className="absolute bottom-6 left-5 right-5 max-w-xl lg:left-16">
                     <p className="mb-3 text-xs font-extrabold uppercase tracking-[0.18em] text-cyan">{item.tag}</p>
-                    <h3 className="font-display text-4xl font-bold uppercase leading-none text-white lg:text-5xl">{item.title}</h3>
+                    <h3 className="font-display text-4xl font-bold uppercase leading-none text-white lg:text-6xl">{item.title}</h3>
                   </div>
                 </article>
               ))}

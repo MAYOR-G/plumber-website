@@ -19,12 +19,14 @@
 
 html {
   scroll-behavior: smooth;
+  overflow-x: clip;
 }
 
 body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
+  overflow-x: clip;
   background:
     linear-gradient(90deg, rgba(7, 24, 45, 0.025) 1px, transparent 1px),
     linear-gradient(180deg, rgba(7, 24, 45, 0.02) 1px, transparent 1px),
@@ -58,6 +60,7 @@ section[id] {
   scroll-snap-type: x mandatory;
   scrollbar-width: thin;
   scrollbar-color: rgba(24, 189, 242, 0.65) rgba(7, 24, 45, 0.08);
+  will-change: transform;
 }
 
 .project-gallery > article {
@@ -75,6 +78,16 @@ section[id] {
 .project-gallery::-webkit-scrollbar-thumb {
   background: rgba(24, 189, 242, 0.75);
   border: 3px solid rgba(238, 246, 250, 1);
+}
+
+@media (min-width: 1024px) {
+  .project-gallery {
+    scrollbar-width: none;
+  }
+
+  .project-gallery::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 @keyframes marquee {
