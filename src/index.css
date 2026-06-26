@@ -1,0 +1,93 @@
+@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Oswald:wght@500;600;700&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color: #07182d;
+  background: #f8fcff;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background:
+    linear-gradient(90deg, rgba(7, 24, 45, 0.045) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(7, 24, 45, 0.035) 1px, transparent 1px),
+    #f8fcff;
+  background-size: 88px 88px, 88px 88px, auto;
+  font-family: "Manrope", "Avenir Next", "Segoe UI", sans-serif;
+}
+
+a,
+button {
+  -webkit-tap-highlight-color: transparent;
+}
+
+img {
+  max-width: 100%;
+}
+
+section[id] {
+  scroll-margin-top: 88px;
+}
+
+::selection {
+  background: rgba(24, 189, 242, 0.28);
+}
+
+.marquee-track {
+  animation: marquee 24s linear infinite;
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes heroDrift {
+  0% {
+    transform: scale(1.035) translate3d(0, 0, 0);
+  }
+  100% {
+    transform: scale(1.11) translate3d(-1.4%, -1%, 0);
+  }
+}
+
+.animate-heroDrift {
+  animation: heroDrift 6.4s ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .marquee-track,
+  .animate-heroDrift {
+    animation: none !important;
+  }
+}
