@@ -34,7 +34,7 @@ const services = [
     text: "Blocked drains cleared fast with camera inspection and professional equipment.",
     icon: Gauge,
     image:
-      "https://images.unsplash.com/photo-1607472586893-edb57bdc0e39?auto=format&fit=crop&w=1200&q=88",
+      "https://commercialplumberalbuquerque.com/wp-content/uploads/2025/01/commercialplumberalbuquerque-Office-Building-Plumbing-Installation.jpg",
     note: "Kitchen, bathroom, and main-line blockages",
   },
   {
@@ -42,7 +42,7 @@ const services = [
     text: "Sinks, showers, toilets, valves, and fixtures installed with tidy finishing.",
     icon: Bath,
     image:
-      "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=900&q=86",
+      "https://images.unsplash.com/photo-1507652313519-d4e9174996dd?auto=format&fit=crop&w=900&q=86",
     note: "Fixture installs with clean water-safe connections",
   },
   {
@@ -58,7 +58,7 @@ const services = [
     text: "Corroded, noisy, or damaged pipes replaced with minimal disruption.",
     icon: Wrench,
     image:
-      "https://precisionmechanical.com/wp-content/uploads/2025/02/tenweb_media_slaoqait9.webp",
+      "https://commercialplumberalbuquerque.com/wp-content/uploads/2025/01/commercialplumberalbuquerque-Retail-Store-Plumbing-Installation.jpg",
     note: "Copper, PVC, supply lines, and local reroutes",
   },
   {
@@ -66,8 +66,24 @@ const services = [
     text: "Reliable maintenance and urgent support for offices, retail, and hospitality.",
     icon: Building2,
     image:
-      "https://precisionmechanical.com/wp-content/uploads/2025/02/tenweb_media_slaoqait9.webp",
+      "https://commercialplumberalbuquerque.com/wp-content/uploads/2025/01/commercialplumberalbuquerque-Industrial-Plumbing-Installation.jpg",
     note: "Planned maintenance for occupied properties",
+  },
+  {
+    title: "Kitchen Plumbing",
+    text: "Supply lines, shutoff valves, sink waste, and appliance connections fitted cleanly.",
+    icon: Wrench,
+    image:
+      "https://commercialplumberalbuquerque.com/wp-content/uploads/2025/01/commercialplumberalbuquerque-restaurant-fixtures.jpg",
+    note: "Sinks, dishwashers, and clean water lines",
+  },
+  {
+    title: "Toilet & Tap Repairs",
+    text: "Running toilets, loose taps, dripping fixtures, and small faults fixed without fuss.",
+    icon: Bath,
+    image:
+      "https://commercialplumberalbuquerque.com/wp-content/uploads/2025/01/commercialplumberalbuquerque-Healthcare-Facility-Plumbing-Installation.jpg",
+    note: "Fast fixes for everyday plumbing faults",
   },
 ];
 
@@ -75,20 +91,12 @@ const heroImages = [
   {
     src: "https://images.unsplash.com/photo-1607472586893-edb57bdc0e39?auto=format&fit=crop&w=1800&q=90",
     alt: "Plumbing technician working around pipework and tools",
-  },
-  {
-    src: "https://www.batinoo.com/wp-content/uploads/2023/01/Les-interventions-les-plus-courantes-dun-plombier-en-Martinique-1024x683.jpg",
-    alt: "Plumber repairing pipework beneath a bathroom sink",
-  },
-  {
-    src: "https://precisionmechanical.com/wp-content/uploads/2025/02/tenweb_media_slaoqait9.webp",
-    alt: "Commercial plumber installing building pipework",
-  },
+  }
 ];
 
 const gallery = [
   {
-    title: "Kitchen pipework reset",
+    title: "Sink line repair",
     image:
       "https://www.batinoo.com/wp-content/uploads/2023/01/Les-interventions-les-plus-courantes-dun-plombier-en-Martinique-1024x683.jpg",
     tag: "Under-sink repair",
@@ -129,10 +137,20 @@ const serviceLoop = [
   "Commercial Plumbing",
 ];
 
+const serviceProof = [
+  ["32 min", "average emergency arrival"],
+  ["4.9/5", "verified local rating"],
+  ["12 mo", "repair workmanship cover"],
+];
+
 function App() {
   const [open, setOpen] = React.useState(false);
   const [scrolled, setScrolled] = React.useState(false);
   const [activeHero, setActiveHero] = React.useState(0);
+  const [projectShift, setProjectShift] = React.useState(0);
+  const projectSectionRef = React.useRef<HTMLElement | null>(null);
+  const projectStageRef = React.useRef<HTMLDivElement | null>(null);
+  const projectTrackRef = React.useRef<HTMLDivElement | null>(null);
   const nav = ["Services", "Emergency", "Projects", "Reviews", "Contact"];
 
   React.useEffect(() => {
@@ -153,8 +171,39 @@ function App() {
     return () => window.clearInterval(timer);
   }, []);
 
+  React.useEffect(() => {
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (prefersReducedMotion) return undefined;
+
+    const updateGallery = () => {
+      const section = projectSectionRef.current;
+      const stage = projectStageRef.current;
+      const track = projectTrackRef.current;
+      if (!section || !stage || !track || window.innerWidth < 1024) {
+        setProjectShift(0);
+        return;
+      }
+
+      const maxShift = Math.max(0, track.scrollWidth - stage.clientWidth);
+      const maxScroll = Math.max(1, section.offsetHeight - window.innerHeight);
+      const progress = Math.min(
+        1,
+        Math.max(0, (window.scrollY - section.offsetTop) / maxScroll)
+      );
+      setProjectShift(maxShift * progress);
+    };
+
+    updateGallery();
+    window.addEventListener("scroll", updateGallery, { passive: true });
+    window.addEventListener("resize", updateGallery);
+    return () => {
+      window.removeEventListener("scroll", updateGallery);
+      window.removeEventListener("resize", updateGallery);
+    };
+  }, []);
+
   return (
-    <div className="min-h-screen overflow-hidden bg-ice text-navy">
+    <div className="min-h-screen overflow-x-hidden bg-ice text-navy">
       <header
         className={`fixed top-0 z-50 w-full transition-all duration-300 ${
           scrolled
@@ -289,25 +338,35 @@ function App() {
           </div>
         </section>
 
-        <section id="services" className="px-5 py-24 lg:px-8">
+        <section id="services" className="bg-white px-5 py-16 lg:px-8 lg:py-20">
           <div className="mx-auto max-w-7xl">
-            <SectionHeading eyebrow="Services" title="Plumbing support that feels precise, clean, and dependable." />
-            <div className="mt-12 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+            <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-end">
+              <SectionHeading eyebrow="Services" title="Precise, clean plumbing support." />
+              <div className="grid gap-3 sm:grid-cols-3">
+                {serviceProof.map(([value, label]) => (
+                  <div key={label} className="border border-navy/10 bg-ice px-5 py-4 shadow-card">
+                    <p className="font-display text-3xl font-bold leading-none text-water">{value}</p>
+                    <p className="mt-2 text-xs font-extrabold uppercase tracking-[0.14em] text-steel">{label}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="mt-10 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
               {services.map((service, index) => {
                 const Icon = service.icon;
                 return (
                   <article key={service.title} className={`group overflow-hidden border border-navy/10 bg-white shadow-card transition duration-300 hover:-translate-y-1 hover:shadow-deep ${index === 0 ? "xl:col-span-2" : ""}`}>
-                    <div className={`relative overflow-hidden ${index === 0 ? "h-80" : "h-64"}`}>
+                    <div className={`relative overflow-hidden ${index === 0 ? "h-72" : "h-56"}`}>
                       <img src={service.image} alt={service.title} className="h-full w-full object-cover transition duration-700 group-hover:scale-105" />
                       <div className="absolute inset-0 bg-gradient-to-t from-navy/82 via-navy/18 to-transparent" />
-                      <div className="absolute bottom-5 left-5 grid h-12 w-12 place-items-center rounded-full bg-water text-navy shadow-glow">
-                        <Icon className="h-6 w-6" />
+                      <div className="absolute bottom-4 left-4 grid h-11 w-11 place-items-center rounded-full bg-water text-navy shadow-glow">
+                        <Icon className="h-5 w-5" />
                       </div>
                     </div>
-                    <div className="p-6">
-                      <p className="mb-4 text-xs font-extrabold uppercase tracking-[0.18em] text-water">{service.note}</p>
-                      <h3 className="font-display text-4xl font-bold uppercase leading-none">{service.title}</h3>
-                      <p className="mt-4 text-sm leading-7 text-steel">{service.text}</p>
+                    <div className="p-5">
+                      <p className="mb-3 text-[11px] font-extrabold uppercase tracking-[0.16em] text-water">{service.note}</p>
+                      <h3 className="font-display text-3xl font-bold uppercase leading-none">{service.title}</h3>
+                      <p className="mt-3 text-sm leading-6 text-steel">{service.text}</p>
                     </div>
                   </article>
                 );
@@ -316,16 +375,16 @@ function App() {
           </div>
         </section>
 
-        <section className="relative overflow-hidden bg-navy px-5 py-24 text-white lg:px-8">
+        <section className="relative overflow-hidden bg-navy px-5 py-20 text-white lg:px-8">
           <div className="absolute inset-0 opacity-50 [background-image:linear-gradient(90deg,rgba(112,228,255,.08)_1px,transparent_1px),linear-gradient(180deg,rgba(112,228,255,.06)_1px,transparent_1px)] [background-size:88px_88px]" />
           <div className="relative mx-auto grid max-w-7xl gap-10 lg:grid-cols-[0.82fr_1.18fr] lg:items-center">
             <div>
               <SectionHeading eyebrow="Problem to solution" title="We stop water problems from becoming property problems." light />
-              <p className="mt-6 max-w-xl text-lg leading-8 text-white/68">
-                Every visit is built around clean diagnosis, protected surfaces,
-                and a repair record you can understand after the tools are packed.
+              <p className="mt-5 max-w-xl text-base leading-7 text-white/68">
+                Clean diagnosis, protected surfaces, and a simple repair record
+                after every visit.
               </p>
-              <div className="mt-8 flex flex-wrap gap-3">
+              <div className="mt-7 flex flex-wrap gap-3">
                 {["Moisture checks", "Pressure tested", "Tidy handover"].map((item) => (
                   <span key={item} className="rounded-full border border-white/14 bg-white/[0.06] px-4 py-2 text-xs font-extrabold uppercase tracking-[0.16em] text-white/72">
                     {item}
@@ -336,7 +395,7 @@ function App() {
             <div className="grid gap-5 md:grid-cols-2">
               <article className="border border-white/12 bg-white/[0.06] p-7 shadow-deep backdrop-blur-md md:translate-y-8">
                 <p className="text-xs font-extrabold uppercase tracking-[0.24em] text-cyan">Before</p>
-                <p className="mt-6 font-display text-4xl font-bold uppercase leading-tight text-white">
+                <p className="mt-5 font-display text-3xl font-bold uppercase leading-tight text-white">
                   Hidden leaks, water damage, noisy pipes, slow drains, and unclear repair costs.
                 </p>
               </article>
@@ -344,7 +403,7 @@ function App() {
                 <img src="https://precisionmechanical.com/wp-content/uploads/2025/02/tenweb_media_slaoqait9.webp" alt="Commercial plumber securing clean pipe connections" className="h-56 w-full object-cover" />
                 <div className="p-7">
                   <p className="text-xs font-extrabold uppercase tracking-[0.24em] text-water">After</p>
-                  <p className="mt-5 font-display text-4xl font-bold uppercase leading-tight">
+                  <p className="mt-5 font-display text-3xl font-bold uppercase leading-tight">
                     Stable pressure, protected finishes, and a clear record of what changed.
                   </p>
                 </div>
@@ -353,32 +412,46 @@ function App() {
           </div>
         </section>
 
-        <section className="px-5 py-24 lg:px-8">
+        <section className="bg-white px-5 py-16 lg:px-8 lg:py-20">
           <div className="mx-auto max-w-7xl">
             <SectionHeading eyebrow="Process" title="Simple steps. Clear quote. Clean repair." />
-            <div className="mt-12 grid gap-5 md:grid-cols-4">
+            <div className="mt-10 grid gap-4 md:grid-cols-4">
               {["Call Us", "We Inspect", "Clear Quote", "Clean Repair"].map((step, index) => (
-                <article key={step} className="border border-navy/10 bg-white p-6 shadow-card transition hover:-translate-y-1">
-                  <span className="font-display text-5xl font-bold text-water">0{index + 1}</span>
-                  <h3 className="mt-8 font-display text-3xl font-bold uppercase leading-none">{step}</h3>
-                  <p className="mt-4 text-sm leading-7 text-steel">Straightforward communication, careful work, and no messy surprises.</p>
+                <article key={step} className="border border-navy/10 bg-ice p-5 shadow-card transition hover:-translate-y-1">
+                  <span className="font-display text-4xl font-bold text-water">0{index + 1}</span>
+                  <h3 className="mt-6 font-display text-2xl font-bold uppercase leading-none">{step}</h3>
+                  <p className="mt-3 text-sm leading-6 text-steel">Clear communication and tidy work.</p>
                 </article>
               ))}
             </div>
           </div>
         </section>
 
-        <section id="projects" className="bg-mist px-5 py-24 lg:px-8">
-          <div className="mx-auto max-w-7xl">
-            <SectionHeading eyebrow="Projects" title="Clean work, modern fixtures, and repairs built to last." />
-            <div className="mt-12 grid gap-4 lg:grid-cols-3">
+        <section
+          id="projects"
+          ref={projectSectionRef}
+          className="bg-mist px-5 py-20 lg:h-[360vh] lg:px-0 lg:py-0"
+        >
+          <div ref={projectStageRef} className="mx-auto lg:sticky lg:top-0 lg:flex lg:h-screen lg:w-screen lg:max-w-none lg:flex-col lg:justify-center lg:overflow-hidden">
+            <div className="mx-auto flex w-full max-w-7xl flex-col gap-5 md:flex-row md:items-end md:justify-between lg:px-8">
+              <SectionHeading eyebrow="Projects" title="Clean repairs. Better finished spaces." />
+              <p className="max-w-md text-sm font-semibold leading-6 text-steel">
+                Recent plumbing work across kitchens, bathrooms, hot water systems,
+                and commercial interiors.
+              </p>
+            </div>
+            <div
+              ref={projectTrackRef}
+              className="project-gallery mt-10 flex w-max gap-4 overflow-x-auto pb-5 lg:gap-6 lg:overflow-visible lg:px-16 lg:pb-0"
+              style={{ transform: `translate3d(-${projectShift}px, 0, 0)` }}
+            >
               {gallery.map((item, index) => (
-                <article key={item.title} className={`${index === 0 ? "lg:col-span-2 lg:row-span-2 min-h-[520px]" : "min-h-[260px]"} group relative overflow-hidden bg-navy shadow-card`}>
+                <article key={item.title} className="group relative h-[430px] min-w-[82vw] shrink-0 overflow-hidden bg-navy shadow-card sm:min-w-[560px] lg:h-[48vh] lg:min-w-[calc(100vw-8rem)]">
                   <img src={item.image} alt={item.title} className="absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-105" />
                   <div className="absolute inset-0 bg-gradient-to-t from-navy/86 via-navy/10 to-transparent" />
                   <div className="absolute bottom-5 left-5 right-5">
                     <p className="mb-3 text-xs font-extrabold uppercase tracking-[0.18em] text-cyan">{item.tag}</p>
-                    <h3 className="font-display text-4xl font-bold uppercase leading-none text-white">{item.title}</h3>
+                    <h3 className="font-display text-4xl font-bold uppercase leading-none text-white lg:text-5xl">{item.title}</h3>
                   </div>
                 </article>
               ))}
@@ -492,11 +565,11 @@ function SectionHeading({
   light?: boolean;
 }) {
   return (
-    <div className="max-w-3xl">
-      <p className={`text-xs font-extrabold uppercase tracking-[0.24em] ${light ? "text-cyan" : "text-water"}`}>
+    <div className="max-w-2xl">
+      <p className={`text-[11px] font-extrabold uppercase tracking-[0.22em] ${light ? "text-cyan" : "text-water"}`}>
         {eyebrow}
       </p>
-      <h2 className={`mt-4 font-display text-5xl font-bold uppercase leading-[0.92] sm:text-6xl ${light ? "text-white" : "text-navy"}`}>
+      <h2 className={`mt-3 font-display text-4xl font-bold uppercase leading-[0.94] sm:text-5xl ${light ? "text-white" : "text-navy"}`}>
         {title}
       </h2>
     </div>
